@@ -1,350 +1,313 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1877F2">
-<meta name="robots" content="noindex,nofollow">
-<title>Admin Control Center</title>
-<style>
-:root{--brand-blue:#1877F2;--error-red:#FA3E3E;--bg-color:#F0F2F5;--container-bg:#FFFFFF;--text-primary:#1C1E21;--text-secondary:#606770;--border-color:#CCD0D5;--fs:15px}
-body.dark-mode{--bg-color:#18191A;--container-bg:#242526;--text-primary:#E4E6EB;--text-secondary:#B0B3B8;--border-color:#3E4042}
-*{box-sizing:border-box;margin:0;padding:0;font-family:Roboto,sans-serif;font-size:var(--fs);-webkit-tap-highlight-color:transparent}
-html,body{width:100dvw;height:100dvh;overflow:hidden;background:var(--bg-color);color:var(--text-primary)}
-h1,h2,b,.btn{font-weight:700}
-p{line-height:1.5}
-button{cursor:pointer;touch-action:manipulation}
-.ic{width:24px;height:24px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.mut{color:var(--text-secondary)}
-.err{color:var(--error-red)}
-.bar{position:fixed;top:0;left:0;width:100dvw;height:56px;display:flex;align-items:center;background:var(--brand-blue);color:#fff;z-index:5}
-.bar h1{flex:1;text-align:center;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ib{width:48px;height:48px;flex:none;border:0;background:none;color:inherit;display:grid;place-items:center;border-radius:50%}
-.bar .ib:active{background:rgba(255,255,255,.25)}
-.pg{position:fixed;top:56px;bottom:0;left:0;width:100dvw;overflow-x:hidden;overflow-y:auto;padding:16px}
-.card{background:var(--container-bg);border:1px solid var(--border-color);border-radius:16px;padding:16px;margin-bottom:12px;overflow-wrap:anywhere}
-.card h2{margin-bottom:8px}
-.btn{width:100%;min-height:48px;border:0;border-radius:24px;background:var(--brand-blue);color:#fff;padding:0 20px;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px}
-.btn:active{filter:brightness(.85)}
-.btn.danger{background:var(--error-red)}
-input{width:100%;min-height:48px;border:1px solid var(--border-color);border-radius:12px;padding:0 12px;background:var(--container-bg);color:var(--text-primary);margin-bottom:12px}
-input:focus{outline:2px solid var(--brand-blue);border-color:transparent}
-.row2{display:flex;align-items:center;gap:8px;min-width:0}
-.row2>span{flex:1;min-width:0}
-.sw{width:56px;height:32px;flex:none;border-radius:16px;background:var(--border-color);position:relative;border:0;display:block;transition:background .2s}
-.sw::after{content:"";position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s}
-.sw[aria-checked="true"]{background:var(--brand-blue)}
-.sw[aria-checked="true"]::after{transform:translateX(24px)}
-.kv{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-color)}
-.kv:last-child{border:0}
-.timer{color:var(--brand-blue);font-weight:700}
-.scrim{position:fixed;inset:0;width:100dvw;height:100dvh;background:rgba(0,0,0,.5);display:grid;place-items:center;z-index:40}
-.toast{position:fixed;top:50%;left:50%;width:80dvw;transform:translate(-50%,-50%) scale(.9);display:flex;align-items:center;gap:12px;background:var(--container-bg);color:var(--text-primary);border:1px solid var(--border-color);border-left:6px solid var(--brand-blue);border-radius:16px;padding:16px;box-shadow:0 8px 24px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:.2s;z-index:50}
-.toast.err{border-left-color:var(--error-red)}
-.toast.err .ic{color:var(--error-red)}
-.toast .ic{color:var(--brand-blue)}
-.toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
-.ring{width:48px;height:48px;border:5px solid var(--border-color);border-top-color:var(--brand-blue);border-radius:50%;animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.block,.center{position:fixed;inset:0;width:100dvw;height:100dvh;display:grid;place-items:center;text-align:center;padding:24px;background:var(--bg-color);overflow-y:auto;overflow-x:hidden}
-.block>div,.center>div{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%}
-.block .ic{width:48px;height:48px;color:var(--error-red)}
-.logo{width:120px;height:120px;border-radius:50%;background:var(--brand-blue);color:#fff;border:0;display:grid;place-items:center;user-select:none;-webkit-user-select:none}
-.logo .ic{width:64px;height:64px}
-.okc{color:var(--brand-blue)}
-.okc .ic{width:64px;height:64px}
-.code{text-align:center;letter-spacing:8px;font-weight:700}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#1877F2">
+  <title>DV-Utilitiy Admin Terminal</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .admin-logo-box {
+      width: 96px;
+      height: 96px;
+      margin: 32px auto;
+      background-color: var(--brand-blue);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 4px 12px rgba(24, 119, 242, 0.4);
+    }
+    .admin-logo-box svg {
+      width: 52px;
+      height: 52px;
+      fill: #FFFFFF;
+    }
+    .timer-display {
+      font-size: 28px;
+      font-weight: bold;
+      color: var(--brand-blue);
+      text-align: center;
+      margin: 16px 0;
+    }
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .metric-card {
+      background-color: var(--bg-color);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .metric-number {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--brand-blue);
+      margin-top: 4px;
+    }
+  </style>
 </head>
 <body>
-<div id="app-root"><div id="app"></div></div>
-<script>
-/* Puzzle Plugin: Human Check (puzzle.js) for DV-Utilitiy. Self-contained. Delete this file and its script tag to remove it.
-   Shows one short, one-tap or one-swipe puzzle before the app, chosen at random so each visit feels different. */
+  <!-- Desktop Blocker -->
+  <div id="desktop-blocker" class="desktop-blocker">
+    <div class="blocker-card">
+      <svg class="blocker-icon" viewBox="0 0 24 24">
+        <path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/>
+      </svg>
+      <h2>Mobile Only Platform</h2>
+      <p>DV-Utilitiy Admin Terminal is restricted to Android mobile screens.</p>
+    </div>
+  </div>
 
-(function () {
-  'use strict';
-  try {
-    if (!/Android/i.test(navigator.userAgent)) return;
-    if (new URLSearchParams(location.search).has('c')) return; /* never gate short-link redirects */
-    var P = 'dvp-pz', KEY = 'dvp-pz-ok', LAST = 'dvp-pz-last';
-    try { if (sessionStorage.getItem(KEY) === '1') return; } catch (e) {}
+  <div class="app-viewport">
+    <header class="app-header">
+      <a href="index.html" class="icon-button" aria-label="Return to Main">
+        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      </a>
+      <h1 class="header-title">Admin Terminal</h1>
+      <div style="width: var(--touch-target)"></div>
+    </header>
 
-    var css =
-      '#' + P + '{position:fixed;inset:0;width:100dvw;height:100dvh;z-index:2147483000;display:flex;align-items:center;justify-content:center;background:var(--bg-color,#F0F2F5);color:var(--text-primary,#1C1E21);font:15px Roboto,sans-serif;overflow:hidden;touch-action:manipulation}' +
-      '#' + P + ' *{box-sizing:border-box;font-family:inherit}' +
-      '.' + P + '-blob{position:absolute;width:90dvw;height:90dvw;border-radius:50%;background:radial-gradient(circle,rgba(24,119,242,.30),rgba(24,119,242,0) 68%);animation:' + P + '-float 14s ease-in-out infinite alternate}' +
-      '.' + P + '-b1{top:-30dvw;left:-25dvw}.' + P + '-b2{bottom:-35dvw;right:-30dvw;animation-delay:-6s;animation-duration:18s}' +
-      '@keyframes ' + P + '-float{to{transform:translate(12dvw,8dvh) scale(1.12)}}' +
-      '.' + P + '-card{position:relative;width:calc(100% - 40px);background:var(--container-bg,#fff);border:1px solid var(--border-color,#CCD0D5);border-radius:28px;padding:28px 20px 24px;text-align:center;box-shadow:0 16px 48px rgba(24,119,242,.18);animation:' + P + '-in .5s cubic-bezier(.2,.8,.2,1)}' +
-      '@keyframes ' + P + '-in{from{opacity:0;transform:translateY(24px) scale(.97)}}' +
-      '.' + P + '-brand{display:flex;align-items:center;justify-content:center;gap:10px;font-weight:800;color:var(--brand-blue,#1877F2);margin-bottom:6px}' +
-      '.' + P + '-logo{width:40px;height:40px;border-radius:50%;background:var(--brand-blue,#1877F2);display:grid;place-items:center}' +
-      '.' + P + '-logo svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}' +
-      '.' + P + '-badge{display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:700;padding:4px 14px;border-radius:999px;background:rgba(24,119,242,.2);color:var(--brand-blue,#1877F2);margin:8px 0 18px}' +
-      '.' + P + '-q{font-size:15px;font-weight:900;line-height:1.25;margin:0 0 22px}' +
-      '.' + P + '-fb{min-height:28px;margin-top:16px;font-weight:700;color:var(--error-red,#FA3E3E)}.' + P + '-fb.ok{color:var(--success,#146C2E)}' +
-      '.' + P + '-track{position:relative;height:68px;border-radius:34px;background:var(--bg-color,#F0F2F5);border:2px solid var(--border-color,#CCD0D5);overflow:hidden;touch-action:none;user-select:none}' +
-      '.' + P + '-fill{position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(24,119,242,.2)}' +
-      '.' + P + '-hint{position:absolute;inset:0;display:grid;place-items:center;font-weight:700;opacity:.7;padding-left:56px}' +
-      '.' + P + '-knob{position:absolute;left:4px;top:4px;width:56px;height:56px;border-radius:50%;border:0;background:var(--brand-blue,#1877F2);display:grid;place-items:center;touch-action:none;cursor:grab}' +
-      '.' + P + '-knob svg,.' + P + '-pen svg{width:28px;height:28px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}' +
-      '.' + P + '-stage{position:relative;height:220px;touch-action:none;user-select:none}' +
-      '.' + P + '-page{position:absolute;right:6px;top:6px;width:116px;height:150px;border-radius:14px;border:3px dashed var(--brand-blue,#1877F2);display:grid;place-items:center;background:var(--bg-color,#F0F2F5)}' +
-      '.' + P + '-page svg{width:44px;height:44px;fill:none;stroke:var(--brand-blue,#1877F2);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.6}' +
-      '.' + P + '-pen{position:absolute;left:6px;bottom:6px;width:68px;height:68px;border-radius:50%;background:var(--brand-blue,#1877F2);display:grid;place-items:center;border:0;touch-action:none;cursor:grab;box-shadow:0 8px 20px rgba(24,119,242,.35)}' +
-      '.' + P + '-snap{transition:transform .25s cubic-bezier(.2,.8,.2,1),width .25s}' +
-      '.' + P + '-shake{animation:' + P + '-sh .35s}@keyframes ' + P + '-sh{25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}' +
-      '.' + P + '-spin{display:grid;place-items:center}.' + P + '-spin i{width:56px;height:56px;border:6px solid rgba(24,119,242,.2);border-top-color:var(--brand-blue,#1877F2);border-radius:50%;animation:' + P + '-rot .8s linear infinite}' +
-      '@keyframes ' + P + '-rot{to{transform:rotate(360deg)}}' +
-      '@media (prefers-reduced-motion:reduce){#' + P + ' *{animation-duration:.01s!important;transition-duration:.01s!important}#' + P + ' .' + P + '-spin i{animation-duration:.8s!important}}';
+    <main class="content-frame">
+      <!-- 4-Tap Entry Point -->
+      <section id="phase-trigger" class="card" style="text-align: center;">
+        <h2 class="section-title">Security Gateway</h2>
+        <p class="panel-desc">Administrative identity validation required.</p>
+        <div id="admin-secret-logo" class="admin-logo-box">
+          <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+        </div>
+      </section>
 
-    var I = {
-      pen: 'M4 20l4-1 11-11-3-3L5 16zM14 6l3 3', book: 'M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM8 8h7', quote: 'M7 17h3l2-4V7H6v6h3M15 17h3l2-4V7h-6v6h3',
-      check: 'M5 12l5 5 9-10', star: 'M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2-5.5-2.9-5.5 2.9 1-6.2L3 9.6l6.2-.9z', bolt: 'M13 2L5 14h6l-1 8 8-12h-6z',
-      arrow: 'M5 12h14M13 6l6 6-6 6', key: 'M8 11a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM11 13l9-9M17 7l3 3M14 10l2 2', lock: 'M6 11h12v9H6zM8 11V8a4 4 0 0 1 8 0v3', frame: 'M4 4h16v16H4zM8 8h8v8H8z', cloud: 'M7 18h10a4 4 0 0 0 .5-8 6 6 0 0 0-11.5 1A4 4 0 0 0 7 18z', plane: 'M3 11l18-8-8 18-2-8z', bookmark: 'M7 3h10v18l-5-4-5 4z', shelf: 'M3 20h18M5 20V9h4v11M11 20V5h4v15M17 20V11h2v9', battery: 'M3 8h15v8H3zM18 11h3v2h-3', box: 'M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10', shield: 'M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z', doc: 'M7 3h8l4 4v14H7zM15 3v4h4M10 13h6M10 17h6',
-      link: 'M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1'
-    };
-    var svg = function (k) { return '<svg viewBox="0 0 24 24"><path d="' + I[k] + '"/></svg>'; };
-    var shuffle = function (a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; };
-    var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+      <!-- Phase 1: Request Code Screen -->
+      <section id="phase-request" class="card hidden" style="text-align: center;">
+        <h2 class="section-title">Authentication Protocol</h2>
+        <p class="panel-desc">A single-use verification code will be dispatched to the verified administrator mailbox.</p>
+        <button id="btn-request-code" class="btn btn-primary btn-block">Send Me Code</button>
+      </section>
 
+      <!-- Center Progress Indicator -->
+      <section id="phase-dispatching" class="card hidden" style="text-align: center;">
+        <div class="spinner"></div>
+        <p>Verification code has been sent to your registered email.</p>
+      </section>
 
-    var host, card, box, fb, t0, wrongs = 0, curId = '';
-    var settle = function (ok, quiet) {
-      if (ok) return unlock();
-      wrongs++; card.classList.remove(P + '-shake'); void card.offsetWidth; card.classList.add(P + '-shake');
-      fb.textContent = quiet ? '' : 'Not quite. Here is a different one.';
-      setTimeout(function () { show(); }, 700);
-    };
-    var human = function (e) { return !e || e.isTrusted !== false; };
-    var tap = function (el, fn) { el.addEventListener('click', function (e) { if (Date.now() - t0 < 700 || !human(e)) return settle(false, true); fn(e); }); };
+      <!-- Phase 2 & 3: Input Code Screen & Timer -->
+      <section id="phase-verify" class="card hidden">
+        <h2 class="section-title" style="text-align: center;">Verification Required</h2>
+        <div id="otp-timer" class="timer-display">10:00</div>
+        <div class="input-group">
+          <label for="input-otp" class="field-label">6-Digit Authorization Code</label>
+          <input type="number" id="input-otp" class="text-input" placeholder="000000" maxlength="6">
+        </div>
+        <button id="btn-verify-otp" class="btn btn-primary btn-block">Verify</button>
+      </section>
 
-    var slideP = function (title, ico, hint) {
-      return function () {
-        box.innerHTML = '<p class="' + P + '-q">' + title + '</p><div class="' + P + '-track"><div class="' + P + '-fill"></div><div class="' + P + '-hint">' + hint + '</div><button class="' + P + '-knob" aria-label="' + hint + '">' + svg(ico) + '</button></div>';
-        var track = box.querySelector('.' + P + '-track'), knob = box.querySelector('.' + P + '-knob'), fill = box.querySelector('.' + P + '-fill');
-        var x = 0, sx = 0, max = 0, on = false, t1 = 0, mv = 0, tries = 0;
-        var put = function (v) { x = v; knob.style.transform = 'translateX(' + v + 'px)'; fill.style.width = (v + 32) + 'px'; };
-        knob.addEventListener('pointerdown', function (e) { on = true; mv = 0; t1 = Date.now(); max = track.clientWidth - knob.offsetWidth - 8; sx = e.clientX - x; knob.classList.remove(P + '-snap'); fill.classList.remove(P + '-snap'); knob.setPointerCapture(e.pointerId); });
-        knob.addEventListener('pointermove', function (e) { if (!on) return; mv++; put(Math.max(0, Math.min(max, e.clientX - sx))); });
-        var end = function (e) {
-          if (!on) return; on = false; knob.classList.add(P + '-snap'); fill.classList.add(P + '-snap');
-          if (x >= max * 0.96) { if (Date.now() - t1 >= 350 && mv >= 4 && human(e) && Date.now() - t0 >= 700) return settle(true); return settle(false, true); }
-          if (mv >= 4 && ++tries >= 2) return settle(false);
-          put(0);
-        };
-        knob.addEventListener('pointerup', end); knob.addEventListener('pointercancel', end);
+      <!-- Phase 4: Authorized Admin Control Center -->
+      <section id="phase-dashboard" class="card hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h2 class="section-title" style="margin: 0;">System Core</h2>
+          <button id="btn-logout" class="btn btn-secondary" style="height: 36px; padding: 0 12px; font-size: 14px;">Logout</button>
+        </div>
+
+        <div class="toggle-row">
+          <span>Shortener Service</span>
+          <button id="btn-toggle-engine" class="btn btn-primary" style="height: 40px; font-size: 16px;">Active</button>
+        </div>
+
+        <h3 class="section-title" style="margin-top: 24px;">Quota & Resource Metrics</h3>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <span class="field-label">Mail Balance</span>
+            <div id="metric-mail" class="metric-number">--</div>
+          </div>
+          <div class="metric-card">
+            <span class="field-label">Total Links</span>
+            <div id="metric-urls" class="metric-number">--</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Custom Alert Dialog -->
+  <div id="admin-dialog-backdrop" class="center-dialog-backdrop hidden">
+    <div class="center-dialog-box">
+      <h3 id="admin-dialog-title" class="dialog-title">Notice</h3>
+      <p id="admin-dialog-message" class="dialog-message"></p>
+      <div class="dialog-actions">
+        <button id="btn-admin-dialog-ok" class="btn btn-primary btn-block">Acknowledge</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="api.js"></script>
+  <script>
+    let tapCount = 0;
+    let countdownInterval = null;
+    let sessionToken = sessionStorage.getItem('dv_admin_token') || null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      enforceAndroidAdmin();
+      if (sessionToken) {
+        renderDashboard();
+      } else {
+        setupTrigger();
+      }
+    });
+
+    function enforceAndroidAdmin() {
+      const blocker = document.getElementById('desktop-blocker');
+      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isAndroid = /android/i.test(navigator.userAgent);
+      if (window.innerWidth > 768 || (!isTouch && !isAndroid)) {
+        if (blocker) blocker.style.display = 'flex';
+      }
+    }
+
+    function showAdminDialog(title, message, callback) {
+      const backdrop = document.getElementById('admin-dialog-backdrop');
+      document.getElementById('admin-dialog-title').textContent = title;
+      document.getElementById('admin-dialog-message').textContent = message;
+      backdrop.classList.remove('hidden');
+
+      document.getElementById('btn-admin-dialog-ok').onclick = () => {
+        backdrop.classList.add('hidden');
+        if (callback) callback();
       };
-    };
-    var dragP = function (title, piece, target) {
-      return function () {
-        box.innerHTML = '<p class="' + P + '-q">' + title + '</p><div class="' + P + '-stage"><div class="' + P + '-page">' + svg(target) + '</div><button class="' + P + '-pen" aria-label="' + title + '">' + svg(piece) + '</button></div>';
-        var pen = box.querySelector('.' + P + '-pen'), pg = box.querySelector('.' + P + '-page');
-        var x = 0, y = 0, sx = 0, sy = 0, on = false, t1 = 0, mv = 0, tries = 0;
-        var put = function (a, b) { x = a; y = b; pen.style.transform = 'translate(' + a + 'px,' + b + 'px)'; };
-        pen.addEventListener('pointerdown', function (e) { on = true; mv = 0; t1 = Date.now(); sx = e.clientX - x; sy = e.clientY - y; pen.classList.remove(P + '-snap'); pen.setPointerCapture(e.pointerId); });
-        pen.addEventListener('pointermove', function (e) { if (on) { mv++; put(e.clientX - sx, e.clientY - sy); } });
-        var end = function (e) {
-          if (!on) return; on = false; pen.classList.add(P + '-snap');
-          var a = pen.getBoundingClientRect(), b = pg.getBoundingClientRect(), cx = a.left + a.width / 2, cy = a.top + a.height / 2;
-          if (cx > b.left - 10 && cx < b.right + 10 && cy > b.top - 10 && cy < b.bottom + 10) {
-            if (Date.now() - t1 >= 350 && mv >= 4 && human(e) && Date.now() - t0 >= 700) { put(x + (b.left + b.width / 2) - cx, y + (b.top + b.height / 2) - cy); return setTimeout(function () { settle(true); }, 260); }
-            return settle(false, true);
+    }
+
+    function setupTrigger() {
+      const logo = document.getElementById('admin-secret-logo');
+      logo.addEventListener('click', () => {
+        tapCount++;
+        if (tapCount >= 4) {
+          tapCount = 0;
+          document.getElementById('phase-trigger').classList.add('hidden');
+          document.getElementById('phase-request').classList.remove('hidden');
+        }
+      });
+
+      document.getElementById('btn-request-code').addEventListener('click', async () => {
+        document.getElementById('phase-request').classList.add('hidden');
+        document.getElementById('phase-dispatching').classList.remove('hidden');
+
+        const res = await ApiClient.requestOtp();
+        setTimeout(() => {
+          document.getElementById('phase-dispatching').classList.add('hidden');
+          if (res.success) {
+            document.getElementById('phase-verify').classList.remove('hidden');
+            startTimer(600);
+          } else {
+            showAdminDialog('Error', res.error || 'Failed to dispatch code.', () => {
+              document.getElementById('phase-request').classList.remove('hidden');
+            });
           }
-          if (mv >= 4 && ++tries >= 2) return settle(false);
-          put(0, 0);
-        };
-        pen.addEventListener('pointerup', end); pen.addEventListener('pointercancel', end);
+        }, 1200);
+      });
+
+      document.getElementById('btn-verify-otp').addEventListener('click', async () => {
+        const input = document.getElementById('input-otp');
+        const code = input.value.trim();
+
+        if (code.length !== 6) {
+          showAdminDialog('Verification', 'Please enter a valid 6-digit code.');
+          return;
+        }
+
+        const res = await ApiClient.verifyOtp(code);
+        if (res.success) {
+          clearInterval(countdownInterval);
+          sessionToken = res.token;
+          sessionStorage.setItem('dv_admin_token', sessionToken);
+          showAdminDialog('Success', 'You have been verified.', () => {
+            document.getElementById('phase-verify').classList.add('hidden');
+            renderDashboard();
+          });
+        } else {
+          showAdminDialog('Authentication Failure', res.error || 'Verification code declined.');
+        }
+      });
+    }
+
+    function startTimer(durationSeconds) {
+      let remaining = durationSeconds;
+      const display = document.getElementById('otp-timer');
+      clearInterval(countdownInterval);
+
+      countdownInterval = setInterval(() => {
+        const m = Math.floor(remaining / 60);
+        const s = remaining % 60;
+        display.textContent = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+
+        if (--remaining < 0) {
+          clearInterval(countdownInterval);
+          showAdminDialog('Code Expired', 'Session timed out. Please request a new verification code.', () => {
+            window.location.reload();
+          });
+        }
+      }, 1000);
+    }
+
+    async function renderDashboard() {
+      document.getElementById('phase-trigger').classList.add('hidden');
+      document.getElementById('phase-request').classList.add('hidden');
+      document.getElementById('phase-verify').classList.add('hidden');
+      document.getElementById('phase-dashboard').classList.remove('hidden');
+
+      const res = await ApiClient.getAdminMetrics(sessionToken);
+      if (res.success) {
+        document.getElementById('metric-mail').textContent = res.mailQuota;
+        document.getElementById('metric-urls').textContent = res.totalUrls;
+        updateToggleUi(res.systemEnabled);
+      } else {
+        logoutSession();
+        return;
+      }
+
+      document.getElementById('btn-toggle-engine').onclick = async () => {
+        const isCurrentActive = document.getElementById('btn-toggle-engine').textContent === 'Active';
+        const resToggle = await ApiClient.toggleSystem(sessionToken, !isCurrentActive);
+        if (resToggle.success) {
+          updateToggleUi(resToggle.systemEnabled);
+        } else {
+          showAdminDialog('Action Failed', resToggle.error || 'Unable to update toggle status.');
+        }
       };
-    };
-    var TYPES = {
-      slide1: slideP('Slide to verify', 'arrow', 'Slide to verify'), slide2: slideP('Slide to unlock', 'lock', 'Slide to unlock'),
-      slide3: slideP('Slide to send', 'plane', 'Slide to send'), slide4: slideP('Slide to shorten', 'link', 'Slide to start'),
-      slide5: slideP('Slide to open the link', 'link', 'Slide to open'), slide6: slideP('Slide to save', 'check', 'Slide to save'),
-      slide7: slideP('Slide to power up', 'bolt', 'Slide to power up'), slide8: slideP('Slide to publish', 'doc', 'Slide to publish'),
-      drag1: dragP('Drag the link onto the page', 'link', 'doc'), drag2: dragP('Drag the key to the lock', 'key', 'lock'),
-      drag3: dragP('Drag the star into the frame', 'star', 'frame'), drag4: dragP('Drag the plane to the cloud', 'plane', 'cloud'),
-      drag5: dragP('Drag the book to the shelf', 'book', 'shelf'), drag6: dragP('Drag the bolt to the battery', 'bolt', 'battery'),
-      drag7: dragP('Drag the check into the box', 'check', 'box'), drag8: dragP('Drag the bookmark into the book', 'bookmark', 'book')
-    };
 
-    var bag = [];
-    var show = function () {
-      if (!bag.length) { bag = shuffle(Object.keys(TYPES)); if (bag.length > 1 && bag[bag.length - 1] === curId) bag.reverse(); }
-      var last = ''; try { last = localStorage.getItem(LAST) || ''; } catch (e) {}
-      if (bag.length > 1 && bag[bag.length - 1] === last) bag.unshift(bag.pop());
-      curId = bag.pop(); try { localStorage.setItem(LAST, curId); } catch (e) {}
-      box.innerHTML = ''; fb.textContent = ''; fb.className = P + '-fb'; t0 = Date.now(); TYPES[curId]();
-    };
-    var finished = false;
-    var unlock = function () {
-      if (finished) return; finished = true;
-      try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
-      card.style.display = 'none';
-      var sp = document.createElement('div'); sp.className = P + '-spin'; sp.setAttribute('role', 'status'); sp.setAttribute('aria-label', 'Loading'); sp.innerHTML = '<i></i>';
-      host.appendChild(sp);
-      setTimeout(function () {
-        host.style.transition = 'opacity .35s'; host.style.opacity = '0';
-        setTimeout(function () { host.remove(); var a = document.getElementById('app-root'); if (a) a.removeAttribute('inert'); document.documentElement.style.overflow = ''; document.body.style.overflow = ''; }, 380);
-      }, 5000);
-    };
+      document.getElementById('btn-logout').onclick = () => {
+        logoutSession();
+      };
+    }
 
-    var build = function () {
-      var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
-      host = document.createElement('div'); host.id = P; host.setAttribute('role', 'dialog'); host.setAttribute('aria-modal', 'true'); host.setAttribute('aria-label', 'Human check');
-      host.innerHTML = '<div class="' + P + '-blob ' + P + '-b1"></div><div class="' + P + '-blob ' + P + '-b2"></div><div class="' + P + '-card"><div class="' + P + '-brand"><span class="' + P + '-logo"><svg viewBox="0 0 24 24"><path d="' + I.link + '"/></svg></span>DV-Utilitiy</div><span class="' + P + '-badge"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="' + I.shield + '"/></svg>Quick human check</span><div id="' + P + '-box"></div><div class="' + P + '-fb" id="' + P + '-fb" role="status" aria-live="polite"></div></div>';
-      document.body.appendChild(host); card = host.querySelector('.' + P + '-card'); box = document.getElementById(P + '-box'); fb = document.getElementById(P + '-fb');
-      document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden';
-      var a = document.getElementById('app-root'); if (a) a.setAttribute('inert', '');
-      show('');
-    };
-    if (document.body) build(); else document.addEventListener('DOMContentLoaded', build);
-  } catch (err) { console.warn('Human check plugin disabled:', err); }
-})();
-</script>
-<script>
-(() => {
-  const API_URL = 'PASTE_WEB_APP_URL_HERE';
+    function updateToggleUi(isEnabled) {
+      const btn = document.getElementById('btn-toggle-engine');
+      if (isEnabled) {
+        btn.textContent = 'Active';
+        btn.style.backgroundColor = 'var(--brand-blue)';
+      } else {
+        btn.textContent = 'Disabled';
+        btn.style.backgroundColor = 'var(--error-red)';
+      }
+    }
 
-  const api = async (a, d) => {
-    try {
-      const r = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ a }, d)), keepalive: true });
-      return await r.json();
-    } catch (e) { return { ok: false, e: 'net' }; }
-  };
-
-  const I = {
-    shield: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
-    check: '<path d="M5 12l5 5 9-10"/>',
-    logout: '<path d="M9 21H5V3h4M16 17l5-5-5-5M21 12H9"/>',
-    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/>',
-    moon: '<path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/>',
-    alert: '<path d="M12 3l10 18H2zM12 10v5M12 18v.5"/>'
-  };
-  const ic = n => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${I[n]}</svg>`;
-  const ls = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
-  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-
-  const theme = t => {
-    if (!t) t = ls('dvt') || 'light';
-    document.body.classList.toggle('dark-mode', t === 'dark');
-    ls('dvt', t);
-    const b = document.getElementById('th'); if (b) b.innerHTML = ic(t === 'dark' ? 'sun' : 'moon');
-  };
-  const toggleTheme = () => theme(document.body.classList.contains('dark-mode') ? 'light' : 'dark');
-
-  const toast = (m, t) => {
-    let e = document.getElementById('toast');
-    if (!e) { e = document.createElement('div'); e.id = 'toast'; document.body.appendChild(e); }
-    e.className = 'toast show ' + (t || '');
-    e.innerHTML = ic(t === 'err' ? 'alert' : 'check') + '<span>' + esc(m) + '</span>';
-    clearTimeout(toast._t); toast._t = setTimeout(() => e.classList.remove('show'), 2400);
-  };
-  const busy = on => {
-    let e = document.getElementById('busy');
-    if (!on) { if (e) e.remove(); return; }
-    if (e) return;
-    e = document.createElement('div'); e.id = 'busy'; e.className = 'scrim'; e.innerHTML = '<div class="ring"></div>';
-    document.body.appendChild(e);
-  };
-
-  theme();
-  const android = /Android/i.test(navigator.userAgent) && matchMedia('(pointer:coarse)').matches && !matchMedia('(hover:hover) and (pointer:fine)').matches;
-  if (!android) {
-    document.body.innerHTML = `<div class="block"><div>${ic('alert')}<p>This app works on Android phones only.</p></div></div>`;
-    return;
-  }
-
-  const A = document.getElementById('app');
-  let taps = 0, tt, tok = '', cd, en = true;
-  const wrap = h => (A.innerHTML = `<div class="center"><div>${h}</div></div>`);
-  const spin = msg => wrap(`<div class="ring"></div>${msg ? `<p>${msg}</p>` : ''}`);
-
-  const home = () => {
-    clearInterval(cd); taps = 0;
-    wrap(`<button class="logo" id="lg" aria-label="Admin Control Center">${ic('shield')}</button><h2>Admin Control Center</h2>`);
-    document.getElementById('lg').onclick = () => {
-      taps++; clearTimeout(tt); tt = setTimeout(() => (taps = 0), 2500);
-      if (taps === 4) { taps = 0; sendScreen(); }
-    };
-  };
-
-  const sendScreen = err => {
-    wrap(`<h2>Verify it is you</h2>${err ? `<p class="err">${err}</p>` : ''}<button class="btn" id="snd">Send me code</button>`);
-    document.getElementById('snd').onclick = send;
-  };
-
-  const send = async () => {
-    spin();
-    const r = await api('otp');
-    if (!r.ok) return sendScreen(r.e === 'wait' ? 'Please wait a minute before requesting another code.' : 'Could not send the code. Try again later.');
-    spin('Verification code has been sent to your registered email.');
-    setTimeout(verifyScreen, 1800);
-  };
-
-  const verifyScreen = err => {
-    wrap(`<h2>Enter code</h2><p class="mut">Expires in <span class="timer" id="tm">10:00</span></p>
-      <input id="cd" class="code" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000">
-      ${err ? `<p class="err">${err}</p>` : ''}<button class="btn" id="vf">Verify</button>`);
-    const end = Date.now() + 600000, tm = document.getElementById('tm');
-    clearInterval(cd);
-    cd = setInterval(() => {
-      const s = Math.max(0, Math.ceil((end - Date.now()) / 1000));
-      tm.textContent = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
-      if (!s) { clearInterval(cd); sendScreen('Code expired. Request a new one.'); }
-    }, 1000);
-    document.getElementById('vf').onclick = verify;
-  };
-
-  const verify = async () => {
-    const o = document.getElementById('cd').value.trim();
-    if (!/^\d{6}$/.test(o)) return toast('Enter the 6-digit code', 'err');
-    spin();
-    const r = await api('verify', { o });
-    if (!r.ok) return verifyScreen('Invalid or expired code.');
-    clearInterval(cd); tok = r.t;
-    wrap(`<div class="okc">${ic('check')}</div><h2>You have been verified.</h2>`);
-    const s = await api('stats', { t: tok });
-    setTimeout(() => (s.ok ? dash(s) : logout()), 1000);
-  };
-
-  const dash = s => {
-    en = s.en;
-    A.innerHTML = `<header class="bar"><button class="ib" id="th" aria-label="Theme"></button><h1>Admin Control Center</h1><button class="ib" id="lo" aria-label="Logout">${ic('logout')}</button></header>
-      <main class="pg">
-        <div class="card"><div class="row2"><span><b>System status</b><br><span class="mut" id="st">${en ? 'Enabled' : 'Disabled'}</span></span><button class="sw" id="tg" role="switch" aria-checked="${en}" aria-label="Enable or disable shortening"></button></div></div>
-        <div class="card"><h2>Quota &amp; usage</h2>
-          <div class="kv"><span>Mail quota remaining</span><b>${s.rem}</b></div>
-          <div class="kv"><span>Quota used today (OTPs sent)</span><b>${s.used}</b></div>
-          <div class="kv"><span>Total URLs generated</span><b>${s.total}</b></div></div>
-        <button class="btn danger" id="lo2">${ic('logout')}Logout</button>
-      </main>`;
-    theme(ls('dvt') || 'light');
-    document.getElementById('th').onclick = toggleTheme;
-    document.getElementById('lo').onclick = document.getElementById('lo2').onclick = logout;
-    document.getElementById('tg').onclick = async () => {
-      busy(true);
-      const r = await api('toggle', { t: tok, v: !en });
-      busy(false);
-      if (r.e === 'auth') return logout();
-      if (!r.ok) return toast('Could not update', 'err');
-      en = r.en;
-      document.getElementById('tg').setAttribute('aria-checked', en);
-      document.getElementById('st').textContent = en ? 'Enabled' : 'Disabled';
-      toast(en ? 'System enabled' : 'System disabled');
-    };
-  };
-
-  const logout = () => {
-    const t = tok; tok = ''; clearInterval(cd);
-    if (t) api('out', { t });
-    document.body.innerHTML = '';
-    location.replace(location.pathname);
-  };
-
-  home();
-})();
-</script>
+    function logoutSession() {
+      sessionStorage.removeItem('dv_admin_token');
+      sessionToken = null;
+      document.getElementById('phase-dashboard').innerHTML = '';
+      window.location.href = 'index.html';
+    }
+  </script>
 </body>
 </html>
