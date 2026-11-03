@@ -41,7 +41,13 @@ DV.esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '
 DV.ls = (key, v) => { try { if (v === undefined) return localStorage.getItem(key); localStorage.setItem(key, v); } catch (e) { return null; } };
 DV.dev = () => {
   let d = DV.ls('dvd');
-  if (!d) { d = crypto.randomUUID().replace(/-/g, ''); DV.ls('dvd', d); }
+  if (!d) {
+    const a = new Uint8Array(16);
+    if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(a);
+    else a.forEach((_, i) => { a[i] = Math.random() * 256; });
+    d = Array.from(a, x => x.toString(16).padStart(2, '0')).join('');
+    DV.ls('dvd', d);
+  }
   return d;
 };
 
