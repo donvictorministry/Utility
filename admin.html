@@ -8,22 +8,24 @@
   <link rel="stylesheet" href="styles.css">
   <style>
     .admin-logo-box {
-      width: 96px;
-      height: 96px;
+      width: 104px;
+      height: 104px;
       margin: 32px auto;
       background-color: var(--brand-blue);
-      border-radius: 20px;
+      border-radius: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       user-select: none;
-      box-shadow: 0 4px 12px rgba(24, 119, 242, 0.4);
+      box-shadow: 0 4px 16px rgba(24, 119, 242, 0.45);
+      touch-action: manipulation;
     }
     .admin-logo-box svg {
-      width: 52px;
-      height: 52px;
+      width: 56px;
+      height: 56px;
       fill: #FFFFFF;
+      pointer-events: none;
     }
     .timer-display {
       font-size: 28px;
@@ -156,22 +158,32 @@
   <script>
     let tapCount = 0;
     let countdownInterval = null;
-    let sessionToken = sessionStorage.getItem('dv_admin_token') || null;
+    let sessionToken = null;
 
-    document.addEventListener('DOMContentLoaded', () => {
+    try {
+      sessionToken = sessionStorage.getItem('dv_admin_token');
+    } catch(e) {}
+
+    function bootAdmin() {
       enforceAndroidAdmin();
       if (sessionToken) {
         renderDashboard();
       } else {
         setupTrigger();
       }
-    });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootAdmin);
+    } else {
+      bootAdmin();
+    }
 
     function enforceAndroidAdmin() {
       const blocker = document.getElementById('desktop-blocker');
-      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
       const isAndroid = /android/i.test(navigator.userAgent);
-      if (window.innerWidth > 768 || (!isTouch && !isAndroid)) {
+      if (window.innerWidth > 768 && !isTouch && !isAndroid) {
         if (blocker) blocker.style.display = 'flex';
       }
     }
@@ -182,7 +194,8 @@
       document.getElementById('admin-dialog-message').textContent = message;
       backdrop.classList.remove('hidden');
 
-      document.getElementById('btn-admin-dialog-ok').onclick = () => {
+      document.getElementById('btn-admin-dialog-ok').onclick = (e) => {
+        e.preventDefault();
         backdrop.classList.add('hidden');
         if (callback) callback();
       };
@@ -190,7 +203,8 @@
 
     function setupTrigger() {
       const logo = document.getElementById('admin-secret-logo');
-      logo.addEventListener('click', () => {
+      logo.addEventListener('click', (e) => {
+        e.preventDefault();
         tapCount++;
         if (tapCount >= 4) {
           tapCount = 0;
@@ -199,25 +213,27 @@
         }
       });
 
-      document.getElementById('btn-request-code').addEventListener('click', async () => {
+      document.getElementById('btn-request-code').addEventListener('click', async (e) => {
+        e.preventDefault();
         document.getElementById('phase-request').classList.add('hidden');
         document.getElementById('phase-dispatching').classList.remove('hidden');
 
         const res = await ApiClient.requestOtp();
         setTimeout(() => {
           document.getElementById('phase-dispatching').classList.add('hidden');
-          if (res.success) {
+          if (res && res.success) {
             document.getElementById('phase-verify').classList.remove('hidden');
             startTimer(600);
           } else {
-            showAdminDialog('Error', res.error || 'Failed to dispatch code.', () => {
+            showAdminDialog('Error', (res && res.error) ? res.error : 'Failed to dispatch code.', () => {
               document.getElementById('phase-request').classList.remove('hidden');
             });
           }
         }, 1200);
       });
 
-      document.getElementById('btn-verify-otp').addEventListener('click', async () => {
+      document.getElementById('btn-verify-otp').addEventListener('click', async (e) => {
+        e.preventDefault();
         const input = document.getElementById('input-otp');
         const code = input.value.trim();
 
@@ -227,16 +243,16 @@
         }
 
         const res = await ApiClient.verifyOtp(code);
-        if (res.success) {
+        if (res && res.success) {
           clearInterval(countdownInterval);
           sessionToken = res.token;
-          sessionStorage.setItem('dv_admin_token', sessionToken);
+          try { sessionStorage.setItem('dv_admin_token', sessionToken); } catch(e) {}
           showAdminDialog('Success', 'You have been verified.', () => {
             document.getElementById('phase-verify').classList.add('hidden');
             renderDashboard();
           });
         } else {
-          showAdminDialog('Authentication Failure', res.error || 'Verification code declined.');
+          showAdminDialog('Authentication Failure', (res && res.error) ? res.error : 'Verification code declined.');
         }
       });
     }
@@ -267,7 +283,7 @@
       document.getElementById('phase-dashboard').classList.remove('hidden');
 
       const res = await ApiClient.getAdminMetrics(sessionToken);
-      if (res.success) {
+      if (res && res.success) {
         document.getElementById('metric-mail').textContent = res.mailQuota;
         document.getElementById('metric-urls').textContent = res.totalUrls;
         updateToggleUi(res.systemEnabled);
@@ -276,17 +292,19 @@
         return;
       }
 
-      document.getElementById('btn-toggle-engine').onclick = async () => {
+      document.getElementById('btn-toggle-engine').onclick = async (e) => {
+        e.preventDefault();
         const isCurrentActive = document.getElementById('btn-toggle-engine').textContent === 'Active';
         const resToggle = await ApiClient.toggleSystem(sessionToken, !isCurrentActive);
-        if (resToggle.success) {
+        if (resToggle && resToggle.success) {
           updateToggleUi(resToggle.systemEnabled);
         } else {
-          showAdminDialog('Action Failed', resToggle.error || 'Unable to update toggle status.');
+          showAdminDialog('Action Failed', (resToggle && resToggle.error) ? resToggle.error : 'Unable to update toggle status.');
         }
       };
 
-      document.getElementById('btn-logout').onclick = () => {
+      document.getElementById('btn-logout').onclick = (e) => {
+        e.preventDefault();
         logoutSession();
       };
     }
@@ -303,7 +321,7 @@
     }
 
     function logoutSession() {
-      sessionStorage.removeItem('dv_admin_token');
+      try { sessionStorage.removeItem('dv_admin_token'); } catch(e) {}
       sessionToken = null;
       document.getElementById('phase-dashboard').innerHTML = '';
       window.location.href = 'index.html';
