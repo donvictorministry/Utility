@@ -1,444 +1,113 @@
-/**
- * DV-Utilitiy Application Business Logic
- */
+/* Shared UI kit: icons, guard, theme, centered toast/dialog/loader, history-aware modals */
+const DV = {};
 
-// Safe Storage Helper prevents crashes in restricted WebViews / Incognito
-const SafeStorage = {
-  get: (key, fallback = null) => {
-    try {
-      const val = localStorage.getItem(key);
-      return val !== null ? val : fallback;
-    } catch (e) {
-      return fallback;
-    }
-  },
-  set: (key, val) => {
-    try {
-      localStorage.setItem(key, val);
-    } catch (e) {}
-  },
-  getJSON: (key, fallback = []) => {
-    try {
-      const val = localStorage.getItem(key);
-      return val ? JSON.parse(val) : fallback;
-    } catch (e) {
-      return fallback;
-    }
-  },
-  setJSON: (key, val) => {
-    try {
-      localStorage.setItem(key, JSON.stringify(val));
-    } catch (e) {}
-  }
+DV.I = {
+  menu: '<path d="M3 6h18M3 12h18M3 18h18"/>',
+  dots: '<circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/>',
+  home: '<path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/>',
+  edit: '<path d="M4 20h4L20 8l-4-4L4 16zM14 6l4 4"/>',
+  more: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/>',
+  moon: '<path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/>',
+  back: '<path d="M19 12H5M12 5l-7 7 7 7"/>',
+  heart: '<path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11z"/>',
+  eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  copy: '<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>',
+  android: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  team: '<circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0M16 4.5a3.5 3.5 0 0 1 0 7M19 20a7 7 0 0 0-3-5.7"/>',
+  help: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7M12 17v.5"/>',
+  doc: '<path d="M6 3h8l4 4v14H6zM14 3v4h4M9 13h6M9 17h6"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  list: '<path d="M9 6h12M9 12h12M9 18h12M4 6h.5M4 12h.5M4 18h.5"/>',
+  download: '<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/>',
+  trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14"/>',
+  check: '<path d="M5 12l5 5 9-10"/>',
+  circle: '<circle cx="12" cy="12" r="9"/>',
+  logout: '<path d="M9 21H5V3h4M16 17l5-5-5-5M21 12H9"/>',
+  shield: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  alert: '<path d="M12 3l10 18H2zM12 10v5M12 18v.5"/>',
+  twitter: '<path d="M4 4l16 16M20 4L4 20"/>',
+  bluetooth: '<path d="M7 7l10 10-5 5V2l5 5L7 17"/>',
+  gmail: '<rect x="2" y="5" width="20" height="14" rx="2" fill="#fff" stroke="#EA4335" stroke-width="2"/><path d="M2 7l10 7 10-7" stroke="#EA4335" stroke-width="2.5"/>',
+  whatsapp: '<path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z" fill="#25D366" stroke="none"/><path d="M8.5 7.5c-.5.6-.9 1.7.3 3.4 1.3 1.9 3 3 4.7 3.4 1 .2 1.8-.5 2-1.1l-1.8-1-.8.8c-1-.4-2-1.3-2.5-2.3l.7-.8-.9-1.9c-.3-.7-1.2-.5-1.7-.5z" fill="#fff" stroke="none"/>',
+  facebook: '<circle cx="12" cy="12" r="10" fill="#1877F2" stroke="none"/><path d="M13.5 21v-7.5h2.5l.4-3h-2.9V8.7c0-.9.3-1.4 1.5-1.4h1.5V4.6c-.3 0-1.2-.1-2.2-.1-2.2 0-3.7 1.3-3.7 3.8v2.2H8.1v3h2.5V21z" fill="#fff" stroke="none"/>',
+  phone: '<circle cx="12" cy="12" r="10" fill="#34A853" stroke="none"/><path d="M8 6.5l2 .5.8 2.2-1.2 1c.7 1.4 1.8 2.5 3.2 3.2l1-1.2 2.2.8.5 2c0 .6-.6 1.5-1.5 1.5C10.5 16.5 7.5 13.5 7.5 8c0-.9.9-1.5.5-1.5z" fill="#fff" stroke="none"/>'
 };
 
-const AppState = {
-  theme: SafeStorage.get('dv_theme', 'light'),
-  todos: SafeStorage.getJSON('dv_todos', []),
-  activeModalHistory: []
+DV.ic = (n, c) => `<svg class="ic ${c || ''}" viewBox="0 0 24 24" aria-hidden="true">${DV.I[n]}</svg>`;
+DV.esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+DV.ls = (key, v) => { try { if (v === undefined) return localStorage.getItem(key); localStorage.setItem(key, v); } catch (e) { return null; } };
+DV.dev = () => {
+  let d = DV.ls('dvd');
+  if (!d) {
+    const a = new Uint8Array(16);
+    if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(a);
+    else a.forEach((_, i) => { a[i] = Math.random() * 256; });
+    d = Array.from(a, x => x.toString(16).padStart(2, '0')).join('');
+    DV.ls('dvd', d);
+  }
+  return d;
 };
 
-function initApp() {
-  applyTheme(AppState.theme);
-  renderTodos();
-  setupNavigation();
-  setupModals();
-  setupInteractions();
-  refreshPublicStats();
-}
+/* Android-only guard (desktop blocker) */
+DV.guard = () => {
+  const ok = /Android/i.test(navigator.userAgent) && matchMedia('(pointer:coarse)').matches && !matchMedia('(hover:hover) and (pointer:fine)').matches;
+  if (ok) return true;
+  document.body.innerHTML = `<div class="block"><div>${DV.ic('alert')}<p>This app works on Android phones only.</p></div></div>`;
+  return false;
+};
 
-function applyTheme(theme) {
-  if (theme === 'dark') {
-    document.body.classList.add('dark-mode');
-  } else {
-    document.body.classList.remove('dark-mode');
-  }
-  AppState.theme = theme;
-  SafeStorage.set('dv_theme', theme);
-}
+/* Theme */
+DV.theme = t => {
+  if (!t) t = DV.ls('dvt') || 'light';
+  document.body.classList.toggle('dark-mode', t === 'dark');
+  DV.ls('dvt', t);
+  document.querySelectorAll('[data-theme-ic]').forEach(e => (e.innerHTML = DV.ic(t === 'dark' ? 'sun' : 'moon')));
+  document.querySelectorAll('[data-sw="dark"]').forEach(e => e.setAttribute('aria-checked', t === 'dark'));
+};
+DV.toggleTheme = () => DV.theme(document.body.classList.contains('dark-mode') ? 'light' : 'dark');
 
-function showCenterDialog(title, message) {
-  const backdrop = document.getElementById('center-dialog-backdrop');
-  if (!backdrop) return;
-  document.getElementById('center-dialog-title').textContent = title;
-  document.getElementById('center-dialog-message').textContent = message;
-  backdrop.classList.remove('hidden');
-
-  const okBtn = document.getElementById('btn-dialog-ok');
-  okBtn.onclick = () => {
-    backdrop.classList.add('hidden');
+/* Centered feedback */
+DV.toast = (m, t) => {
+  let e = document.getElementById('toast');
+  if (!e) { e = document.createElement('div'); e.id = 'toast'; document.body.appendChild(e); }
+  e.className = 'toast show ' + (t || '');
+  e.innerHTML = DV.ic(t === 'err' ? 'alert' : 'check') + '<span>' + DV.esc(m) + '</span>';
+  clearTimeout(DV._t);
+  DV._t = setTimeout(() => e.classList.remove('show'), 2400);
+};
+DV.busy = on => {
+  let e = document.getElementById('busy');
+  if (!on) { if (e) e.remove(); return; }
+  if (e) return;
+  e = document.createElement('div'); e.id = 'busy'; e.className = 'scrim'; e.innerHTML = '<div class="ring"></div>';
+  document.body.appendChild(e);
+};
+DV.ask = (msg, ok, o) => new Promise(res => {
+  o = o || {};
+  const s = document.createElement('div');
+  s.className = 'scrim';
+  s.innerHTML = `<div class="dlg"><p>${DV.esc(msg)}</p><div class="row">${o.cancel === false ? '' : '<button class="btn ghost" data-v="0">Cancel</button>'}<button class="btn ${o.danger ? 'danger' : ''}" data-v="1">${DV.esc(ok || 'OK')}</button></div></div>`;
+  s.onclick = e => {
+    const b = e.target.closest('button');
+    if (b || e.target === s) { s.remove(); res(!!b && b.dataset.v === '1'); }
   };
-}
+  document.body.appendChild(s);
+});
 
-function closeAllDrawers() {
-  const drawerLeft = document.getElementById('drawer-left');
-  const drawerRight = document.getElementById('drawer-right');
-  const drawerBackdrop = document.getElementById('drawer-backdrop');
-
-  if (drawerLeft) drawerLeft.classList.remove('open');
-  if (drawerRight) drawerRight.classList.remove('open');
-  if (drawerBackdrop) drawerBackdrop.classList.remove('active');
-}
-
-function setupNavigation() {
-  // Bottom Navigation Switcher
-  const navTabs = document.querySelectorAll('.nav-tab');
-  const viewPanels = document.querySelectorAll('.view-panel');
-
-  navTabs.forEach(tab => {
-    tab.addEventListener('click', (e) => {
-      e.preventDefault();
-      const currentTab = e.currentTarget;
-      navTabs.forEach(t => t.classList.remove('active'));
-      viewPanels.forEach(p => p.classList.remove('active'));
-
-      currentTab.classList.add('active');
-      const targetViewId = currentTab.getAttribute('data-view');
-      const targetPanel = document.getElementById(targetViewId);
-      if (targetPanel) {
-        targetPanel.classList.add('active');
-      }
-    });
-  });
-
-  // Left & Right Drawer Menus with Overlay Backdrop
-  const drawerLeft = document.getElementById('drawer-left');
-  const drawerRight = document.getElementById('drawer-right');
-  const drawerBackdrop = document.getElementById('drawer-backdrop');
-  const btnLeft = document.getElementById('btn-left-menu');
-  const btnRight = document.getElementById('btn-right-menu');
-  const btnCloseLeft = document.getElementById('btn-close-left');
-  const btnCloseRight = document.getElementById('btn-close-right');
-
-  if (btnLeft && drawerLeft) {
-    btnLeft.addEventListener('click', (e) => {
-      e.preventDefault();
-      closeAllDrawers();
-      drawerLeft.classList.add('open');
-      if (drawerBackdrop) drawerBackdrop.classList.add('active');
-    });
-  }
-
-  if (btnCloseLeft && drawerLeft) {
-    btnCloseLeft.addEventListener('click', (e) => {
-      e.preventDefault();
-      closeAllDrawers();
-    });
-  }
-
-  if (btnRight && drawerRight) {
-    btnRight.addEventListener('click', (e) => {
-      e.preventDefault();
-      closeAllDrawers();
-      drawerRight.classList.add('open');
-      if (drawerBackdrop) drawerBackdrop.classList.add('active');
-    });
-  }
-
-  if (btnCloseRight && drawerRight) {
-    btnCloseRight.addEventListener('click', (e) => {
-      e.preventDefault();
-      closeAllDrawers();
-    });
-  }
-
-  if (drawerBackdrop) {
-    drawerBackdrop.addEventListener('click', () => {
-      closeAllDrawers();
-    });
-  }
-}
-
-function setupModals() {
-  const drawerLeft = document.getElementById('drawer-left');
-  const drawerBackdrop = document.getElementById('drawer-backdrop');
-  const modalLinks = document.querySelectorAll('.drawer-link[data-modal]');
-
-  // Open Fullscreen Modal from Sidebar
-  modalLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const modalId = link.getAttribute('data-modal');
-      const modal = document.getElementById(modalId);
-      if (modal) {
-        if (drawerLeft) drawerLeft.classList.remove('open');
-        if (drawerBackdrop) drawerBackdrop.classList.remove('active');
-        modal.classList.add('open');
-        AppState.activeModalHistory.push({ modal: modal, parent: drawerLeft });
-      }
-    });
-  });
-
-  // Native Android Back Arrow returns to Sidebar Menu first
-  const modalBackButtons = document.querySelectorAll('.btn-modal-back');
-  modalBackButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const currentModal = btn.closest('.fullscreen-modal');
-      if (currentModal) {
-        currentModal.classList.remove('open');
-        const record = AppState.activeModalHistory.pop();
-        if (record && record.parent) {
-          record.parent.classList.add('open');
-          if (drawerBackdrop) drawerBackdrop.classList.add('active');
-        }
-      }
-    });
-  });
-
-  // Share Modal Open Trigger
-  const btnOpenShare = document.getElementById('btn-open-share');
-  if (btnOpenShare) {
-    btnOpenShare.addEventListener('click', (e) => {
-      e.preventDefault();
-      closeAllDrawers();
-      const shareModal = document.getElementById('modal-share');
-      if (shareModal) {
-        shareModal.classList.add('open');
-        AppState.activeModalHistory.push({ modal: shareModal, parent: document.getElementById('drawer-right') });
-      }
-    });
-  }
-
-  // Show More / Show Less for Developer Bio
-  const btnToggleDev = document.getElementById('btn-toggle-dev-bio');
-  if (btnToggleDev) {
-    btnToggleDev.addEventListener('click', function(e) {
-      e.preventDefault();
-      const bio = document.getElementById('dev-bio');
-      const isCollapsed = bio.classList.toggle('collapsed');
-      this.textContent = isCollapsed ? 'Show More' : 'Show Less';
-    });
-  }
-
-  // Show More / Show Less for Team Bio
-  const btnToggleTeam = document.getElementById('btn-toggle-team-bio');
-  if (btnToggleTeam) {
-    btnToggleTeam.addEventListener('click', function(e) {
-      e.preventDefault();
-      const bio = document.getElementById('team-bio');
-      const isCollapsed = bio.classList.toggle('collapsed');
-      this.textContent = isCollapsed ? 'Show More' : 'Show Less';
-    });
-  }
-}
-
-function setupInteractions() {
-  // Dark Mode Toggle
-  const btnTheme = document.getElementById('btn-theme-toggle');
-  if (btnTheme) {
-    btnTheme.addEventListener('click', (e) => {
-      e.preventDefault();
-      const nextTheme = AppState.theme === 'light' ? 'dark' : 'light';
-      applyTheme(nextTheme);
-    });
-  }
-
-  // 24-Hour Rate-Limited Like Trigger
-  const btnLike = document.getElementById('btn-hit-like');
-  if (btnLike) {
-    btnLike.addEventListener('click', async (e) => {
-      e.preventDefault();
-      const lastLiked = SafeStorage.get('dv_last_liked');
-      const now = Date.now();
-
-      if (lastLiked && now - parseInt(lastLiked, 10) < 86400000) {
-        showCenterDialog('Appreciation Recorded', 'You have already appreciated the platform within the last 24 hours.');
-        return;
-      }
-
-      btnLike.disabled = true;
-      const res = await ApiClient.incrementLike();
-      btnLike.disabled = false;
-
-      if (res && res.success) {
-        SafeStorage.set('dv_last_liked', String(now));
-        document.getElementById('stat-likes-count').textContent = res.count;
-        showCenterDialog('Appreciated', 'Thank you for supporting DV-Utilitiy.');
-      } else {
-        showCenterDialog('Notice', (res && res.error) ? res.error : 'Connection to server could not be established.');
-      }
-    });
-  }
-
-  // Shorten URL Form Submission
-  const btnShorten = document.getElementById('btn-shorten-submit');
-  if (btnShorten) {
-    btnShorten.addEventListener('click', async (e) => {
-      e.preventDefault();
-      const input = document.getElementById('input-long-url');
-      const url = input.value.trim();
-
-      if (!url || !url.startsWith('http')) {
-        showCenterDialog('Invalid URL', 'Please provide a valid address starting with http:// or https://');
-        return;
-      }
-
-      btnShorten.disabled = true;
-      btnShorten.textContent = 'Generating...';
-      const res = await ApiClient.shortenUrl(url);
-      btnShorten.disabled = false;
-      btnShorten.textContent = 'Generate Secure Short Link';
-
-      if (res && res.success) {
-        const output = document.getElementById('output-short-url');
-        const constructedUrl = ApiClient.getEndpoint() + '?r=' + res.shortCode;
-        output.value = constructedUrl;
-        document.getElementById('shortener-result').classList.remove('hidden');
-      } else {
-        showCenterDialog('Shorten Error', (res && res.error) ? res.error : 'Server rejected the request or service is inactive.');
-      }
-    });
-  }
-
-  // Copy Short URL to Clipboard
-  const btnCopy = document.getElementById('btn-copy-short-url');
-  if (btnCopy) {
-    btnCopy.addEventListener('click', (e) => {
-      e.preventDefault();
-      const output = document.getElementById('output-short-url');
-      output.select();
-      output.setSelectionRange(0, 99999);
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(output.value).then(() => {
-          showCenterDialog('Copied', 'Short link copied to device clipboard.');
-        }).catch(() => {
-          showCenterDialog('Copied', 'Link ready: ' + output.value);
-        });
-      } else {
-        document.execCommand('copy');
-        showCenterDialog('Copied', 'Short link copied to device clipboard.');
-      }
-    });
-  }
-
-  // Add Task to Checklist
-  const btnAddTodo = document.getElementById('btn-add-todo');
-  if (btnAddTodo) {
-    btnAddTodo.addEventListener('click', (e) => {
-      e.preventDefault();
-      const input = document.getElementById('input-todo');
-      const text = input.value.trim();
-      if (text) {
-        AppState.todos.push({ id: Date.now(), text: text, done: false });
-        input.value = '';
-        saveAndRenderTodos();
-      }
-    });
-  }
-
-  // Share Channels
-  const btnShareNative = document.getElementById('btn-share-native');
-  if (btnShareNative) {
-    btnShareNative.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (navigator.share) {
-        navigator.share({
-          title: 'DV-Utilitiy',
-          text: 'Lean URL routing engine for Android.',
-          url: window.location.href
-        }).catch(() => {});
-      } else {
-        showCenterDialog('Android Share', 'Native share sheet unavailable in this environment.');
-      }
-    });
-  }
-
-  const btnShareWA = document.getElementById('btn-share-whatsapp');
-  if (btnShareWA) {
-    btnShareWA.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(window.location.href), '_blank');
-    });
-  }
-
-  const btnShareFB = document.getElementById('btn-share-facebook');
-  if (btnShareFB) {
-    btnShareFB.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), '_blank');
-    });
-  }
-
-  const btnShareTW = document.getElementById('btn-share-twitter');
-  if (btnShareTW) {
-    btnShareTW.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href), '_blank');
-    });
-  }
-
-  const btnShareBT = document.getElementById('btn-share-bluetooth');
-  if (btnShareBT) {
-    btnShareBT.addEventListener('click', (e) => {
-      e.preventDefault();
-      showCenterDialog('Bluetooth', 'Turn on Bluetooth in your Android device settings to pair and transfer.');
-    });
-  }
-}
-
-function renderTodos() {
-  const container = document.getElementById('todo-items-list');
-  if (!container) return;
-  container.innerHTML = '';
-  AppState.todos.forEach(item => {
-    const li = document.createElement('li');
-    li.className = 'todo-item' + (item.done ? ' done' : '');
-    li.innerHTML = `
-      <span class="todo-text">${escapeHtml(item.text)}</span>
-      <div class="todo-actions">
-        <button class="btn-inline-toggle btn-todo-toggle" data-id="${item.id}">${item.done ? 'Undo' : 'Done'}</button>
-        <button class="btn-inline-toggle btn-todo-del" data-id="${item.id}" style="color:var(--error-red)">Delete</button>
-      </div>
-    `;
-    container.appendChild(li);
-  });
-
-  // Event Delegation for To-Do buttons
-  container.querySelectorAll('.btn-todo-toggle').forEach(b => {
-    b.addEventListener('click', (e) => {
-      e.preventDefault();
-      const id = Number(b.getAttribute('data-id'));
-      AppState.todos = AppState.todos.map(t => t.id === id ? { ...t, done: !t.done } : t);
-      saveAndRenderTodos();
-    });
-  });
-
-  container.querySelectorAll('.btn-todo-del').forEach(b => {
-    b.addEventListener('click', (e) => {
-      e.preventDefault();
-      const id = Number(b.getAttribute('data-id'));
-      AppState.todos = AppState.todos.filter(t => t.id !== id);
-      saveAndRenderTodos();
-    });
-  });
-}
-
-function saveAndRenderTodos() {
-  SafeStorage.setJSON('dv_todos', AppState.todos);
-  renderTodos();
-}
-
-async function refreshPublicStats() {
-  try {
-    const lastView = SafeStorage.get('dv_view_logged');
-    if (!lastView) {
-      await ApiClient.incrementView();
-      SafeStorage.set('dv_view_logged', 'true');
-    }
-
-    const res = await ApiClient.getPublicStats();
-    if (res && res.success) {
-      const vEl = document.getElementById('stat-views-count');
-      const lEl = document.getElementById('stat-likes-count');
-      if (vEl) vEl.textContent = res.views;
-      if (lEl) lEl.textContent = res.likes;
-    }
-  } catch (err) {}
-}
-
-function escapeHtml(str) {
-  return String(str).replace(/[&<>'"]/g, 
-    tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-  );
-}
+/* History-aware layers: Android back closes the top modal/drawer first */
+DV.stack = [];
+DV.push = close => { DV.stack.push({ close }); history.pushState({}, ''); };
+addEventListener('popstate', () => { const t = DV.stack.pop(); if (t) t.close(); });
+DV.open = (title, html, done) => {
+  const m = document.createElement('section');
+  m.className = 'modal';
+  m.innerHTML = `<header class="bar"><button class="ib" data-back aria-label="Back">${DV.ic('back')}</button><h1>${DV.esc(title)}</h1><span class="ib"></span></header><div class="mbody">${html}</div>`;
+  m.querySelector('[data-back]').onclick = () => history.back();
+  document.body.appendChild(m);
+  DV.push(() => m.remove());
+  if (done) done(m);
+  return m;
+};
