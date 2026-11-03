@@ -1,4 +1,4 @@
-const API_URL = 'PASTE_WEB_APP_URL_HERE';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyaeMDgxFd15W5vx8Mwj6hHyBktbQ40Laqcl6K9XkYS2I0Rxl5YdF3AFwiHBuG9yLISKg/exec';
 
 async function api(a, d) {
   try {
