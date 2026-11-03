@@ -1,23 +1,52 @@
-const V = 'dvu-1';
-const FILES = ['./', 'index.html', 'styles.css', 'app.js', 'main.js', 'api.js', 'puzzle.js', 'manifest.json'];
+/**
+ * DV-Utilitiy Service Worker Cache Engine
+ */
 
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(V).then(c => c.addAll(FILES)));
+const CACHE_NAME = 'dv-utilitiy-cache-v1';
+const ASSETS = [
+  'index.html',
+  'admin.html',
+  'styles.css',
+  'app.js',
+  'main.js',
+  'api.js',
+  'manifest.json'
+];
+
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(ASSETS);
+    })
+  );
   self.skipWaiting();
 });
 
-self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(x => x !== V).map(x => caches.delete(x)))));
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.map((k) => {
+          if (k !== CACHE_NAME) {
+            return caches.delete(k);
+          }
+        })
+      );
+    })
+  );
   self.clients.claim();
 });
 
-/* Network-first for same-origin GETs; the Apps Script API is cross-origin and never touched. */
-self.addEventListener('fetch', e => {
-  const u = new URL(e.request.url);
-  if (e.request.method !== 'GET' || u.origin !== location.origin) return;
+self.addEventListener('fetch', (e) => {
+  if (e.request.method !== 'GET') return;
   e.respondWith(
-    fetch(e.request)
-      .then(r => { const copy = r.clone(); caches.open(V).then(c => c.put(e.request, copy)); return r; })
-      .catch(() => caches.match(e.request, { ignoreSearch: true }))
+    caches.match(e.request).then((res) => {
+      return (
+        res ||
+        fetch(e.request).then((netRes) => {
+          return netRes;
+        })
+      );
+    })
   );
 });
