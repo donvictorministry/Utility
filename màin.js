@@ -31,7 +31,7 @@
   $('#dL').innerHTML = dh('DV-Utilitiy') + LEFT.map(x => `<button class="mi" data-k="${x[0]}">${ic(x[1])}<span>${x[2]}</span></button>`).join('');
   $('#dR').innerHTML = `${dh('Menu')}
     <button class="mi" data-r="todo">${ic('list')}<span>To-do-list</span></button>
-    <button class="mi" data-r="dark">${ic('moon')}<span>Dark mode</span><span class="sw" role="switch" data-sw="dark" aria-checked="false"></span></button>
+    <button class="mi" data-r="dark"><span data-theme-ic></span><span>Dark mode</span><span class="sw" role="switch" data-sw="dark" aria-checked="false"></span></button>
     <button class="mi" data-r="share">${ic('android')}<span>Share App</span></button>
     <button class="mi" data-r="install">${ic('download')}<span>Install App</span></button>`;
   DV.theme(DV.ls('dvt') || 'light');
@@ -47,10 +47,18 @@
   /* ---- Stats ---- */
   let S = JSON.parse(DV.ls('dvst') || '{"v":0,"l":0}');
   const paint = () => { const v = $('#sv'), l = $('#sl'); if (v) v.textContent = S.v; if (l) l.textContent = S.l; };
-  if (!sessionStorage.getItem('dvs')) {
-    sessionStorage.setItem('dvs', '1');
-    api('view', { d: DV.dev() }).then(r => { if (r.ok) { S = { v: r.v, l: r.l }; DV.ls('dvst', JSON.stringify(S)); paint(); } });
-  }
+  const save = () => DV.ls('dvst', JSON.stringify(S));
+  const DAY = 864e5, HALF = 18e5;
+  const due = () => Date.now() - Number(DV.ls('dvf') || 0) >= HALF;
+  const sync = view => {
+    DV.ls('dvf', String(Date.now()));
+    return api(view ? 'view' : 'counts', { d: DV.dev() }).then(r => { if (r.ok) { S = { v: r.v, l: r.l }; save(); paint(); } });
+  };
+  /* GAS is contacted only by: 1 view per device per 24h, 1 like per device per 24h,
+     a scheduled sync at most once per 30 minutes (max 48 a day), shortening a link, opening a short link. */
+  if (Date.now() - Number(DV.ls('dvv') || 0) >= DAY) { DV.ls('dvv', String(Date.now())); S.v++; save(); sync(true); }
+  else if (due()) sync(false);
+  setInterval(() => { if (due()) sync(false); }, HALF);
 
   /* ---- History of created links ---- */
   const H = () => JSON.parse(DV.ls('dvh') || '[]');
@@ -79,12 +87,9 @@
     const t = e.target.closest('button'); if (!t) return;
     if (t.dataset.copy) return copy(t.dataset.copy);
     if (t.id === 'like') {
-      const last = Number(DV.ls('dvl') || 0);
-      if (Date.now() - last < 864e5) return DV.toast('You already liked in the last 24 hours', 'err');
-      DV.busy(true); const r = await api('like', { d: DV.dev() }); DV.busy(false);
-      if (r.v !== undefined) { S = { v: r.v, l: r.l }; DV.ls('dvst', JSON.stringify(S)); paint(); }
-      if (r.ok) { DV.ls('dvl', String(Date.now())); DV.toast('Thanks for the like'); }
-      else { if (r.e === 'limit') DV.ls('dvl', String(Date.now())); DV.toast(r.e === 'limit' ? 'You already liked in the last 24 hours' : MSG[r.e] || MSG.err, 'err'); }
+      if (Date.now() - Number(DV.ls('dvl') || 0) < 864e5) return DV.toast('You already liked in the last 24 hours', 'err');
+      DV.ls('dvl', String(Date.now())); S.l++; save(); paint(); DV.toast('Thanks for the like');
+      api('like', { d: DV.dev() }).then(r => { if (r.v !== undefined) { S = { v: r.v, l: r.l }; save(); paint(); } });
     }
     if (t.id === 'go') {
       const u = $('#u').value.trim();
