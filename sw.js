@@ -2,7 +2,7 @@
  * DV-Utilitiy Service Worker Cache Engine
  */
 
-const CACHE_NAME = 'dv-utilitiy-cache-v2.5';
+const CACHE_NAME = 'dv-utilitiy-cache-v3';
 const ASSETS = [
   'index.html',
   'admin.html',
