@@ -4,7 +4,7 @@
 
 const ApiClient = (() => {
   // Update this endpoint with your deployed Google Apps Script Web App URL
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_REPLACE_WITH_YOUR_EXEC_ID/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzzNS9gajVAl1sArLdF73eAdfGqxKbJGEuqN8QZyHaSxpu_8uhU0gp1AXIJHJYgs604RA/exec';
 
   async function postRequest(payload) {
     try {
