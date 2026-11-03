@@ -32,6 +32,23 @@ html, body {
   overflow-x: hidden;
   background-color: var(--bg-color);
   color: var(--text-primary);
+  touch-action: pan-y;
+}
+
+/* Ensure all interactive controls receive instant touch response */
+button, a, input, [role="button"], .drawer-link, .nav-tab, .icon-button {
+  touch-action: manipulation;
+  cursor: pointer;
+  user-select: none;
+}
+
+button svg, .icon-button svg, .nav-tab svg {
+  pointer-events: none;
+}
+
+button:active, .icon-button:active, .nav-tab:active {
+  opacity: 0.8;
+  transform: scale(0.98);
 }
 
 /* Desktop Blocker */
@@ -75,6 +92,7 @@ html, body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
 }
 
 .app-header {
@@ -85,7 +103,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 12px;
+  padding: 0 8px;
   z-index: 10;
 }
 
@@ -103,7 +121,6 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   fill: #FFFFFF;
 }
 
@@ -117,7 +134,7 @@ html, body {
   overflow-y: auto;
   overflow-x: hidden;
   padding: 16px;
-  padding-bottom: 76px;
+  padding-bottom: 80px;
 }
 
 .view-panel {
@@ -215,7 +232,6 @@ html, body {
   border-radius: 8px;
   font-size: 19px;
   font-weight: bold;
-  cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -275,7 +291,6 @@ html, body {
   align-items: center;
   justify-content: center;
   color: var(--text-secondary);
-  cursor: pointer;
 }
 
 .nav-tab svg {
@@ -297,7 +312,19 @@ html, body {
   fill: var(--brand-blue);
 }
 
-/* Side Drawers */
+/* Drawers & Backdrop Overlay */
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  z-index: 80;
+  display: none;
+}
+
+.drawer-backdrop.active {
+  display: block;
+}
+
 .drawer-panel {
   position: fixed;
   top: 0;
@@ -308,7 +335,7 @@ html, body {
   z-index: 100;
   transition: transform 0.25s ease;
   overflow-y: auto;
-  box-shadow: 0 0 16px rgba(0,0,0,0.25);
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.25);
 }
 
 .drawer-left {
@@ -349,7 +376,7 @@ html, body {
 
 .drawer-link {
   width: 100%;
-  height: 52px;
+  height: 54px;
   padding: 0 16px;
   background: transparent;
   border: none;
@@ -358,7 +385,6 @@ html, body {
   color: var(--text-primary);
   display: flex;
   align-items: center;
-  cursor: pointer;
 }
 
 .drawer-content-box {
@@ -382,7 +408,6 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
 }
 
 .theme-icon-light {
@@ -423,7 +448,12 @@ html, body {
   word-break: break-word;
 }
 
-.todo-item.done span {
+.todo-text {
+  flex: 1;
+  padding-right: 8px;
+}
+
+.todo-item.done .todo-text {
   text-decoration: line-through;
   color: var(--text-secondary);
 }
@@ -474,26 +504,27 @@ html, body {
   text-align: center;
 }
 
-/* Rotating Gear & Avatar Requirements */
+/* Rotating Gear & Avatar */
 .developer-avatar-wrapper {
   position: relative;
-  width: 180px;
-  height: 180px;
+  width: 184px;
+  height: 184px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
+  margin: 0 auto 16px;
 }
 
 .rotating-gear-border {
   position: absolute;
   inset: 0;
-  width: 180px;
-  height: 180px;
+  width: 184px;
+  height: 184px;
   border-radius: 50%;
   border: 4px dashed var(--brand-blue);
-  animation: spin-clockwise 10s linear infinite;
+  animation: spin-clockwise 8s linear infinite;
   box-sizing: border-box;
+  pointer-events: none;
 }
 
 .developer-photo {
@@ -509,7 +540,7 @@ html, body {
 .team-avatar-wrapper {
   width: 150px;
   height: 150px;
-  margin-bottom: 16px;
+  margin: 0 auto 16px;
 }
 
 .team-photo {
@@ -553,8 +584,8 @@ html, body {
   border: none;
   color: var(--brand-blue);
   font-weight: bold;
-  cursor: pointer;
   margin-top: 8px;
+  padding: 4px 8px;
 }
 
 /* Social Buttons */
@@ -599,14 +630,13 @@ html, body {
   margin-bottom: 12px;
   color: var(--text-primary);
   font-weight: bold;
-  cursor: pointer;
 }
 
-/* Center Dialog Replacements */
+/* Centered Dialog */
 .center-dialog-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.65);
   z-index: 500;
   display: flex;
   align-items: center;
@@ -615,7 +645,7 @@ html, body {
 }
 
 .center-dialog-backdrop.hidden {
-  display: none;
+  display: none !important;
 }
 
 .center-dialog-box {
@@ -624,7 +654,7 @@ html, body {
   border-radius: 12px;
   padding: 24px;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
 }
 
 .dialog-title {
