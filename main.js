@@ -105,11 +105,18 @@
   };
 
   /* ---- Left sidebar modals ---- */
+  const G = {
+    g: '<rect x="3" y="5.5" width="18" height="13" rx="2.5" fill="#fff" stroke="none"/><path d="M3.5 7.5L12 13.5l8.5-6" fill="none" stroke="#8B0000" stroke-width="2"/>',
+    w: '<path d="M12 2.5a9.5 9.5 0 0 0-8.2 14.3L2.5 21.5l4.8-1.3A9.5 9.5 0 1 0 12 2.5z" fill="none" stroke="#fff" stroke-width="1.8"/><path transform="translate(6.2 6.2) scale(.48)" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" fill="#fff" stroke="none"/>',
+    f: '<circle cx="12" cy="12" r="10" fill="#fff" stroke="none"/><path d="M13.5 21v-7.5h2.5l.4-3h-2.9V8.7c0-.9.3-1.4 1.5-1.4h1.5V4.6c-.3 0-1.2-.1-2.2-.1-2.2 0-3.7 1.3-3.7 3.8v2.2H8.1v3h2.5V21z" fill="#1877F2" stroke="none"/>',
+    p: '<path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" fill="#fff" stroke="none"/>'
+  };
+  const gi = k => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${G[k]}</svg>`;
   const soc = () => `<div class="soc">
-    <a class="sb" href="mailto:info@example.com" aria-label="Gmail">${ic('gmail')}</a>
-    <a class="sb" href="https://wa.me/0000000000" target="_blank" rel="noopener" aria-label="WhatsApp">${ic('whatsapp')}</a>
-    <a class="sb" href="tel:+0000000000" aria-label="Phone">${ic('phone')}</a>
-    <a class="sb" href="https://facebook.com/yourpage" target="_blank" rel="noopener" aria-label="Facebook">${ic('facebook')}</a></div>`;
+    <a class="sb g" href="mailto:info@example.com" aria-label="Gmail">${gi('g')}</a>
+    <a class="sb w" href="https://wa.me/0000000000" target="_blank" rel="noopener" aria-label="WhatsApp">${gi('w')}</a>
+    <a class="sb f" href="https://facebook.com/yourpage" target="_blank" rel="noopener" aria-label="Facebook">${gi('f')}</a>
+    <a class="sb p" href="tel:+0000000000" aria-label="Phone">${gi('p')}</a></div>`;
   const card = (h, ...p) => `<div class="card"><h2>${h}</h2>${p.map(x => `<p>${x}</p>`).join('')}</div>`;
   const person = (id, ring, size, photo, name, role, bio) => `<div class="who"><div class="rw ${ring ? '' : 't'}">${ring ? `<svg class="gear" viewBox="0 0 180 180" aria-hidden="true"><circle cx="90" cy="90" r="85" fill="none" stroke="#1877F2" stroke-width="8" stroke-dasharray="9 7"/><circle cx="90" cy="90" r="81" fill="none" stroke="#1877F2" stroke-width="2"/></svg>` : ''}<img class="ph" width="${size}" height="${size}" alt="${name}" src="${photo || PH}"></div>
     <h2>${name}</h2><p class="mut">${role}</p></div><div class="card"><p class="bio clamp">${bio}</p><button class="btn ghost" data-more style="margin:12px 0 0">Show more</button></div>`;
